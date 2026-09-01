@@ -179,7 +179,7 @@ function pickPiece(slotIndex) {
   pieceEl.dataset.slotIndex = "";
   slots[slotIndex].filled = false;
   slots[slotIndex].matched = false;
-  piecesBin.appendChild(pieceEl);
+  piecesBin.prepend(pieceEl);
   checkWin();
   updateBoard();
 }
