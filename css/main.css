@@ -1,0 +1,259 @@
+@font-face {
+  font-family: "Poppins";
+  src: url("../assets/fonts/Poppins-Regular.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --bg-color: #ffffff;
+  --text-color: #333;
+  --border-color: rgba(0, 0, 0, 0.5);
+  --label-color: #eee;
+  --red: #f44336;
+  --green: #4caf50;
+  --blue: #3f51b5;
+  --lightblue: #2196f3;
+}
+
+.dark-theme {
+  --bg-color: #222;
+  --text-color: #eee;
+  --border-color: rgba(255, 255, 255, 0.5);
+  --label-color: #333;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  border: none;
+  text-decoration: none;
+  line-height: 1;
+  user-select: none;
+}
+
+button {
+  cursor: pointer;
+}
+
+.button {
+  display: inline-block;
+  padding: 8px 16px;
+  background: var(--green);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.truncated {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.25);
+}
+
+.modal > .container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.modal .modal-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 500px;
+  max-width: calc(100% - 20px);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background-color: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+}
+
+.modal .close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 0;
+  background-color: transparent;
+  color: var(--text-color);
+}
+
+.modal .actions {
+  display: flex;
+  gap: 5px;
+}
+
+.modal .actions > * {
+  flex: 1;
+}
+
+.modal .delete {
+  background-color: var(--red);
+}
+
+.modal .input-group {
+  display: flex;
+  gap: 10px;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+.container {
+  max-width: 576px;
+  margin: auto;
+}
+
+.app {
+  overflow-x: hidden;
+  overflow-y: auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  min-height: 100vh;
+  padding: 10px;
+}
+
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+
+.navbar {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  background-color: var(--blue);
+  color: white;
+  padding: 10px;
+}
+
+.navbar .logo {
+  display: flex;
+  align-items: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.navbar .logo img {
+  width: 20px;
+  height: 20px;
+}
+
+.navbar .actions {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.navbar .actions > button {
+  font-size: 1.5rem;
+  padding: 0;
+  background-color: transparent;
+  color: var(--text-color);
+}
+
+.puzzle-board {
+  display: grid;
+  border: 1px solid var(--border-color);
+  background: var(--label-color);
+}
+
+.puzzle-board .slot {
+  border: 1px dashed var(--border-color);
+}
+
+.puzzle-board .slot.filled {
+  border: none;
+}
+
+.pieces-bin {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  width: 100%;
+  height: auto;
+  background: var(--label-color);
+  border: 1px solid var(--border-color);
+}
+
+.pieces-bin .piece {
+  cursor: grab;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.menu-modal .modal-content {
+  top: 50px;
+  left: auto;
+  right: 10px;
+  transform: none;
+  width: max-content;
+  padding: 20px;
+}
+
+.menu-modal .items {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.menu-modal .items > * {
+  display: flex;
+  gap: 10px;
+  cursor: pointer;
+}
+
+/* Medium screens (Tablets, up to 768px wide) */
+@media (max-width: 768px) {
+}
+
+/* Small screens (Phones, up to 480px wide) */
+@media (max-width: 480px) {
+}

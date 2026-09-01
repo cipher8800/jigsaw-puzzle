@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jigsaw Puzzle</title>
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <!-- Canvas Confetti Library -->
+    <script src="vendor/canvas-confetti-1.9.3/confetti.browser.min.js" defer></script>
+    <!-- Bootstrap Icons Library -->
+    <link href="vendor/bootstrap-icons-1.13.1/bootstrap-icons.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/main.css" />
+    <script src="js/constants.js" defer></script>
+    <script src="js/utils.js" defer></script>
+    <script src="js/main.js" defer></script>
+  </head>
+  <body class="dark-theme">
+    <div class="app container">
+      <header class="navbar">
+        <div class="logo">
+          <img src="assets/images/puzzle-piece-fill.png">
+          Jigsaw
+        </div>
+
+        <div class="actions">
+          <button class="menu-btn" onclick="toggleMenuModal()">
+            <i class="bi bi-list"></i>
+          </button>
+        </div>
+      </header>
+
+      <main>
+        <div class="puzzle-board"></div>
+        <div class="pieces-bin"></div>
+      </main>
+
+      <div class="menu-modal modal hidden" onclick="toggleMenuModal()">
+        <div class="container">
+          <div class="modal-content" onclick="stopPropagation(event)">
+            <div class="items">
+              <label>
+                <i class="bi bi-image"></i>
+                Image
+                <input type="file" accept="image/*" hidden onchange="changeImage(this.files[0])" />
+              </label>
+              <label>
+                <i class="bi bi-lightning-fill"></i>
+                Difficulty
+                <select class="diff-select"></select>
+              </label>
+              <div onclick="start()">
+                <i class="bi bi-arrow-counterclockwise"></i>
+                Restart
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
