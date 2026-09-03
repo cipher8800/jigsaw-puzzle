@@ -26,6 +26,10 @@ function generateId() {
   return Math.random().toString(36).slice(2, 11);
 }
 
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 function getFileName(file) {
   return decodeURIComponent(file.name).split("/").pop().split(".").slice(0, -1).join(".");
 }
@@ -82,4 +86,30 @@ function getRandomInt(min, max) {
   
   // Both the minimum and maximum are inclusive
   return Math.floor(Math.random() * (maxFloored - minCeiled + 1)) + minCeiled;
+}
+
+function getRandomItem(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function getUniqueItems(arr, count) {
+  if (!Array.isArray(arr) || count <= 0) return [];  
+  const k = Math.min(count, arr.length);
+  const result = [...arr];
+  for (let i = 0; i < k; i++) {
+    const randIndex = Math.floor(Math.random() * (result.length - i)) + i;
+    [result[i], result[randIndex]] = [result[randIndex], result[i]];
+  }
+  return result.slice(0, k);
+}
+
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    // Pick a random index from 0 to i
+    const j = Math.floor(Math.random() * (i + 1));
+    
+    // Swap elements at indices i and j
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
 }

@@ -2,6 +2,7 @@ const board = document.querySelector(".puzzle-board");
 const piecesBin = document.querySelector(".pieces-bin");
 const menuModal = document.querySelector(".menu-modal");
 const diffSelect = document.querySelector(".diff-select");
+const mainEl = document.querySelector("main");
 
 const maxBoardWidth = 300;
 const maxBoardHeight = 300;
@@ -23,23 +24,24 @@ let tileWidth = boardWidth / gridSize;
 let tileHeight = boardHeight / gridSize;
 
 document.addEventListener("DOMContentLoaded", () => {
-  start();
+  initGame();
 });
 
 diffSelect.addEventListener("change", () => {
   currentDiff = parseInt(diffSelect.value);
-  start();
+  initGame();
 });
 
 piecesBin.addEventListener("dragover", (e) => e.preventDefault());
-piecesBin.addEventListener("drop", placePiece);
+piecesBin.addEventListener("drop", handlePieceDrop);
 
 function changeImage(file) {
   currentImageUrl = URL.createObjectURL(file);
-  start();
+  initGame();
 }
 
-async function start() {
+async function initGame() {
+  mainEl.style.pointerEvents = "none";
   if (!currentImageUrl) currentImageUrl = `assets/images/boards/${getRandomInt(0, 8)}.png`;
 
   currentImg = await loadImage(currentImageUrl);
@@ -53,6 +55,11 @@ async function start() {
   displayPieceBin();
   displayDiffSelect();
   toggleMenuModal(false);
+
+  finishPieces();
+  await sleep(1000);
+  await unfinishPieces();
+  mainEl.style.pointerEvents = null;
 }
 
 function displayBoard() {
@@ -81,8 +88,8 @@ function displayBoard() {
     slotEl.dataset.index = i;
 
     slotEl.addEventListener("dragover", (e) => e.preventDefault());
-    slotEl.addEventListener("drop", placePiece);
-    slotEl.onclick = () => pickPiece(i);
+    slotEl.addEventListener("drop", handlePieceDrop);
+    slotEl.onclick = () => unplacePiece(i);
     board.appendChild(slotEl);
   }
 }
@@ -133,55 +140,73 @@ function displayPieceBin() {
   pieces.forEach((piece) => piecesBin.appendChild(piece));
 }
 
-function placePiece(e) {
+function handlePieceDrop(e) {
   e.preventDefault();
   const pieceId = e.dataTransfer.getData("text/plain");
   const pieceEl = document.getElementById(pieceId);
 
   if (e.target.classList.contains("slot")) {
-    const targetSlot = e.target;
-    const index = targetSlot.dataset.index;
-
-    if (!slots[index].filled) {
-      const prevIndex = pieceEl.dataset.slotIndex;
-      if (prevIndex) {
-        slots[prevIndex].filled = false;
-        slots[prevIndex].matched = false;
-      }
-
-      slots[index].filled = true;
-      slots[index].matched = pieceEl.dataset.index === index;
-      pieceEl.dataset.slotIndex = index;
-
-      targetSlot.appendChild(pieceEl);
-      checkWin();
-      updateBoard();
-    }
+    const targetSlotEl = e.target;
+    placePiece(pieceEl, targetSlotEl);
   } else if (e.target.closest(".pieces-bin")) {
-    const slotIndex = pieceEl.dataset.slotIndex;
-    if (slotIndex) {
-      pieceEl.dataset.slotIndex = "";
-      slots[slotIndex].filled = false;
-      slots[slotIndex].matched = false;
-
-      piecesBin.prepend(pieceEl);
-      updateBoard();
-    }
+    const slotIndex = pieceEl.dataset.fillSlot;
+    if (slotIndex) unplacePiece(slotIndex);
   }
 }
 
-function pickPiece(slotIndex) {
+function placePiece(pieceEl, targetSlotEl, isManual = true) {
+  const index = targetSlotEl.dataset.index;
+  if (slots[index].filled) return;
+
+  // Move between slots
+  const prevIndex = pieceEl.dataset.fillSlot;
+  if (prevIndex) {
+    slots[prevIndex].filled = false;
+    slots[prevIndex].matched = false;
+  }
+
+  slots[index].filled = true;
+  slots[index].matched = pieceEl.dataset.index === index;
+  pieceEl.dataset.fillSlot = index;
+
+  targetSlotEl.appendChild(pieceEl);
+  if (isManual) checkWin();
+  updateBoard();
+}
+
+function unplacePiece(slotIndex) {
   if (!slots[slotIndex].filled) return;
 
   const slotEl = document.querySelector(`.slot[data-index="${slotIndex}"]`);
   const pieceEl = slotEl.querySelector(".piece");
 
-  pieceEl.dataset.slotIndex = "";
+  pieceEl.dataset.fillSlot = "";
   slots[slotIndex].filled = false;
   slots[slotIndex].matched = false;
   piecesBin.prepend(pieceEl);
   checkWin();
   updateBoard();
+}
+
+function finishPieces() {
+  const pieceEls = document.querySelectorAll(".piece");
+
+  for (let i = 0; i < pieceEls.length; i++) {
+    const slotEl = document.querySelector(`.slot[data-index="${pieceEls[i].dataset.index}"]`);
+    placePiece(pieceEls[i], slotEl, false);
+  }
+}
+
+async function unfinishPieces() {
+  const slotEls = document.querySelectorAll(".slot");
+
+  let queue = Array.from({ length: slotCount }, (_, i) => i);
+  queue = shuffle(queue);
+
+  for (let i = 0; i < slotEls.length; i++) {
+    unplacePiece(queue[i]);
+    await sleep(200);
+  }
 }
 
 function checkWin() {
