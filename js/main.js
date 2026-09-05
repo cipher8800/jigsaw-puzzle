@@ -4,6 +4,8 @@ const menuModal = document.querySelector(".menu-modal");
 const diffSelect = document.querySelector(".diff-select");
 const mainEl = document.querySelector("main");
 
+const minBoardWidth = 200;
+const minBoardHeight = 200;
 const maxBoardWidth = 300;
 const maxBoardHeight = 300;
 const difficulties = [
@@ -63,18 +65,28 @@ async function initGame() {
 }
 
 function displayBoard() {
-  // Calculate board dimensions
-  const scale = Math.min(1, maxBoardWidth / currentImg.width, maxBoardHeight / currentImg.height);
-  boardWidth = Math.round(currentImg.width * scale);
-  boardHeight = Math.round(currentImg.height * scale);
+  const imageAspect = currentImg.width / currentImg.height;
+  // Scale down to fit within max bounds preserving aspect ratio
+  let scale = Math.min(1, maxBoardWidth / currentImg.width, maxBoardHeight / currentImg.height);
+  let targetWidth = currentImg.width * scale;
+  let targetHeight = currentImg.height * scale;
+  // Scale up to ensure both dimensions meet minimum thresholds while maintaining aspect ratio
+  if (targetWidth < minBoardWidth || targetHeight < minBoardHeight) {
+    const minScale = Math.max(minBoardWidth / targetWidth, minBoardHeight / targetHeight);
+    targetWidth *= minScale;
+    targetHeight *= minScale;
+  }
+  // Set final integer dimensions
+  boardWidth = Math.round(targetWidth);
+  boardHeight = Math.round(targetHeight);
 
-  // Calculate tile sizes based purely on Grid Size and aspect-scaled board
+  // Calculate tile sizes based on Grid Size and aspect-scaled board
   tileWidth = boardWidth / gridSize;
   tileHeight = boardHeight / gridSize;
 
-  // Set dynamic Board CSS Grid (preserves true rectangular proportions)
-  board.style.minWidth = `${boardWidth}px`;
-  board.style.minHeight = `${boardHeight}px`;
+  // Set dynamic Board CSS Grid
+  board.style.width = `${boardWidth}px`;
+  board.style.height = `${boardHeight}px`;
   board.style.gridTemplateColumns = `repeat(${gridSize}, ${tileWidth}px)`;
   board.style.gridTemplateRows = `repeat(${gridSize}, ${tileHeight}px)`;
 
