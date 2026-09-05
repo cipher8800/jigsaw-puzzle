@@ -38,6 +38,7 @@ piecesBin.addEventListener("dragover", (e) => e.preventDefault());
 piecesBin.addEventListener("drop", handlePieceDrop);
 
 function changeImage(file) {
+  if (!file) return;
   currentImageUrl = URL.createObjectURL(file);
   initGame();
 }
